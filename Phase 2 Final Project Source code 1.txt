@@ -1,0 +1,348 @@
+Developing a Backend Admin for Learner’s Academy
+
+ClassDetails.java:
+
+package com.AllDetails;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="Class_Details")
+public class ClassDetails {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="Id")
+	private int Id;
+	@Column(name="Class")
+	private String ClassName;
+	@Column(name="Section")
+	private String ClassSection;
+	@Column(name="Room_No")
+	private String ClassRoomNo;
+	
+	public ClassDetails() {}
+	
+	public ClassDetails(String className, String classSection, String classRoomNo) {
+		ClassName = className;
+		ClassSection = classSection;
+		ClassRoomNo = classRoomNo;
+	}
+	
+	public ClassDetails(int id, String className, String classSection, String classRoomNo) {
+		super();
+		Id = id;
+		ClassName = className;
+		ClassSection = classSection;
+		ClassRoomNo = classRoomNo;
+	}
+
+	public int getId() {
+		return Id;
+	}
+
+	public void setId(int id) {
+		Id = id;
+	}
+
+	public String getClassName() {
+		return ClassName;
+	}
+
+	public void setClassName(String className) {
+		ClassName = className;
+	}
+
+	public String getClassSection() {
+		return ClassSection;
+	}
+
+	public void setClassSection(String classSection) {
+		ClassSection = classSection;
+	}
+
+	public String getClassRoomNo() {
+		return ClassRoomNo;
+	}
+
+	public void setClassRoomNo(String classRoomNo) {
+		ClassRoomNo = classRoomNo;
+	}
+
+	@Override
+	public String toString() {
+		return "ClassDetails [Id=" + Id + ", ClassName=" + ClassName + ", ClassSection=" + ClassSection
+				+ ", ClassRoomNo=" + ClassRoomNo + "]";
+	}
+	
+}
+
+StudentDetails.java:
+
+package com.AllDetails;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="Student_Details")
+public class StudentDetails {
+		@Id
+		@GeneratedValue(strategy=GenerationType.AUTO)
+		@Column(name="Id")
+		private int Id;
+		@Column(name="Student_Name")
+		private String Name;
+		@Column(name="Roll_No")
+		private String RollNo;
+		@Column(name="Class")
+		private String StudentClass;
+		
+		public StudentDetails() {}
+		public StudentDetails(String name, String rollNo, String class1) {
+			Name = name;
+			RollNo = rollNo;
+			StudentClass = class1;
+		}
+		public StudentDetails(int id, String name, String rollNo, String class1) {
+			super();
+			Id = id;
+			Name = name;
+			RollNo = rollNo;
+			StudentClass = class1;
+		}
+		public int getId() {
+			return Id;
+		}
+		public void setId(int id) {
+			Id = id;
+		}
+		public String getName() {
+			return Name;
+		}
+		public void setName(String name) {
+			Name = name;
+		}
+		public String getRollNo() {
+			return RollNo;
+		}
+		public void setRollNo(String rollNo) {
+			RollNo = rollNo;
+		}
+		public String getStudentClass() {
+			return StudentClass;
+		}
+		public void setClass(String class1) {
+			StudentClass = class1;
+		}
+		@Override
+		public String toString() {
+			return "StudentDetails [Id=" + Id + ", Name=" + Name + ", RollNo=" + RollNo + ", Class=" + StudentClass + "]";
+		}
+ 
+}
+
+SubjectDetails.java:
+
+package com.AllDetails;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="Subject_Details")
+public class SubjectDetails {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="Id")
+	private int Id;
+	@Column(name="Subject_Name")
+	private String SubjectName;
+	@Column(name="Subject_Code")
+	private String SubjectCode;
+	@Column(name="Subject_Teacher")
+	private String SubjectTeacher;
+	
+	public SubjectDetails() {}
+	
+	public SubjectDetails(String subjectName, String subjectCode, String subjectTeacher) {
+		SubjectName = subjectName;
+		SubjectCode = subjectCode;
+		SubjectTeacher = subjectTeacher;
+	}
+	
+	public SubjectDetails(int id, String subjectName, String subjectCode, String subjectTeacher) {
+		super();
+		Id = id;
+		SubjectName = subjectName;
+		SubjectCode = subjectCode;
+		SubjectTeacher = subjectTeacher;
+	}
+
+	public int getId() {
+		return Id;
+	}
+
+	public void setId(int id) {
+		Id = id;
+	}
+
+	public String getSubjectName() {
+		return SubjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		SubjectName = subjectName;
+	}
+
+	public String getSubjectCode() {
+		return SubjectCode;
+	}
+
+	public void setSubjectCode(String subjectCode) {
+		SubjectCode = subjectCode;
+	}
+
+	public String getSubjectTeacher() {
+		return SubjectTeacher;
+	}
+
+	public void setSubjectTeacher(String subjectTeacher) {
+		SubjectTeacher = subjectTeacher;
+	}
+
+	@Override
+	public String toString() {
+		return "SubjectDetails [Id=" + Id + ", SubjectName=" + SubjectName + ", SubjectCode=" + SubjectCode
+				+ ", SubjectTeacher=" + SubjectTeacher + "]";
+	}
+
+}
+
+TeacherDetails.java:
+
+package com.AllDetails;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="Teacher_Details")
+public class TeacherDetails {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="Id")
+	private int Id;
+	@Column(name="Teacher_Name")
+	private String Name;
+	@Column(name="Subject")
+	private String Subject;
+	@Column(name="Class")
+	private String TeacherClass;
+	
+	public TeacherDetails() {}
+	
+	public TeacherDetails(String name, String subject, String class1) {
+		Name = name;
+		Subject = subject;
+		TeacherClass = class1;
+	}
+	
+	public TeacherDetails(int id, String name, String subject, String class1) {
+		super();
+		Id = id;
+		Name = name;
+		Subject = subject;
+		TeacherClass = class1;
+	}
+
+	public int getId() {
+		return Id;
+	}
+
+	public void setId(int id) {
+		Id = id;
+	}
+
+	public String getName() {
+		return Name;
+	}
+
+	public void setName(String name) {
+		Name = name;
+	}
+
+	public String getSubject() {
+		return Subject;
+	}
+
+	public void setSubject(String subject) {
+		Subject = subject;
+	}
+
+	public String getTeacherClass() {
+		return TeacherClass;
+	}
+
+	public void setTeacherClass(String teacherClass) {
+		TeacherClass = teacherClass;
+	}
+
+	@Override
+	public String toString() {
+		return "TeacherDetails [Id=" + Id + ", Name=" + Name + ", Subject=" + Subject + ", TeacherClass=" + TeacherClass
+				+ "]";
+	}
+	
+}
+
+Util.java:
+
+package com.util;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+import com.AllDetails.ClassDetails;
+import com.AllDetails.StudentDetails;
+import com.AllDetails.SubjectDetails;
+import com.AllDetails.TeacherDetails;
+
+public class Util {
+	
+		private static SessionFactory factory;
+		
+		public static SessionFactory buildConnection() {
+			
+			factory = new Configuration().configure("hibernate.cfg.xml")
+					.addAnnotatedClass(StudentDetails.class)	
+					.addAnnotatedClass(TeacherDetails.class)
+					.addAnnotatedClass(ClassDetails.class)
+					.addAnnotatedClass(SubjectDetails.class)
+					.buildSessionFactory();
+			
+			return factory;
+		}
+	
+}

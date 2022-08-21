@@ -1,0 +1,707 @@
+Developing a Backend Admin for Learner’s Academy
+
+AdminPortal.java:
+
+package com.operations;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/login")
+public class AdminPortal extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+  
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		request.getRequestDispatcher("admin-login.html").include(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		
+		String Email = request.getParameter("adminemail");
+		String Password = request.getParameter("adminpassword");
+		
+		if(Email.equals("") && Password.equals("")) {
+			out.println("<div align='center'><h2 style='color:red'>Mandatory Fields Are Empty</h2>"
+					+ "<a href='login'>Retry with Valid Cred</a>"
+					+ "</div>");
+		}else {
+			if(Email.equals("admin@gmail.com") && Password.equals("admin@123")) {
+				out.println("<div align='center'><h2 style='color:green'>WELCOME TO ADMIN PORTAL!</h2></div>");
+				request.getRequestDispatcher("admin -page.html").include(request, response);
+			}else {
+				out.println("<div align='center'><h2 style='color:red'>Invalid Credentials</h2>"
+						+ "<a href='login'>Retry with Valid Cred</a>"
+						+ "</div>");
+			}
+		}
+}
+}
+
+CreateClass.java:
+
+package com.operations;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+import com.AllDetails.ClassDetails;
+import com.util.Util;
+
+@WebServlet("/class")
+public class CreateClass extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		request.getRequestDispatcher("add-class.html").include(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		
+		String name = request.getParameter("Name");
+		String section = request.getParameter("section");
+		String roomNo = request.getParameter("roomno");
+		
+		try {
+			SessionFactory factory = Util.buildConnection();
+			
+			Session session = factory.openSession();
+			
+			ClassDetails classdetails = new ClassDetails(name, section, roomNo);
+			
+			Transaction tx = session.beginTransaction();
+			
+			session.save(classdetails);
+			
+			tx.commit();
+			
+			if(session != null) {
+				out.println("<div align='center'><h2 style='color:green'>CLASS ADDED SUCCESSFULLY!</h2>"
+						+ "<a href='admin-page.html'>RETURN TO MainMenu</a>"
+						+ "</div>");
+			}
+			session.close();
+		} catch (Exception e) {
+			out.println("<div align='center'><h2 style='color:red'>TRY AGAIN! OPERATION FAILED...</h2>"
+					+ "<a href='admin-page.html'>RETURN TO MainMenu</a>"
+					+ "</div>");
+		}
+	}
+
+}
+
+CreateStudent.java:
+
+package com.operations;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+import com.AllDetails.StudentDetails;
+import com.util.Util;
+
+@WebServlet("/student")
+public class CreateStudent extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		request.getRequestDispatcher("add-student.html").include(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		
+		String name = request.getParameter("Name");
+		String RollNo = request.getParameter("rollno");
+		String Class = request.getParameter("class");
+		
+		try {
+			SessionFactory factory = Util.buildConnection();
+			
+			Session session = factory.openSession();
+			
+			StudentDetails studentdetails = new StudentDetails(name, RollNo, Class);
+			
+			Transaction tx = session.beginTransaction();
+			
+			session.save(studentdetails);
+			
+			tx.commit();
+			
+			if(session != null) {
+				out.println("<div align='center'><h2 style='color:green'>STUDENT ADDED SUCCESSFULLY!</h2>"
+						+ "<a href='admin-page.html'>RETURN To MainMenu</a>"
+						+ "</div>");
+			}
+			session.close();
+		} catch (Exception e) {
+			out.println("<div align='center'><h2 style='color:red'>TRY AGAIN! OPERATION FAILED...</h2>"
+					+ "<a href='admin-page.html'>RETURN To MainMenu</a>"
+					+ "</div>");
+		}
+	}
+
+}
+
+CreateSubject.java:
+
+package com.operations;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+import com.AllDetails.StudentDetails;
+import com.AllDetails.SubjectDetails;
+import com.util.Util;
+
+@WebServlet("/subject")
+public class CreateSubject extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		request.getRequestDispatcher("add-subject.html").include(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		
+		String name = request.getParameter("Name");
+		String code = request.getParameter("code");
+		String teacher = request.getParameter("teacher");
+		
+		try {
+			SessionFactory factory = Util.buildConnection();
+			
+			Session session = factory.openSession();
+			
+			SubjectDetails subjectdetails = new SubjectDetails(name, code, teacher);
+			
+			Transaction tx = session.beginTransaction();
+			
+			session.save(subjectdetails);
+			
+			tx.commit();
+			
+			if(session != null) {
+				out.println("<div align='center'><h2 style='color:green'>SUBJECT ADDED SUCCESSFULLY!</h2>"
+						+ "<a href='admin-page.html'>RETURN To MainMenu</a>"
+						+ "</div>");
+			}
+			session.close();
+		} catch (Exception e) {
+			out.println("<div align='center'><h2 style='color:red'>TRY AGAIN! OPERATION FAILED...</h2>"
+					+ "<a href='admin-page.html'>RETURN To MainMenu</a>"
+					+ "</div>");
+		}
+	}
+
+}
+
+CreateStudent.java:
+
+package com.operations;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+import com.AllDetails.StudentDetails;
+import com.util.Util;
+
+@WebServlet("/student")
+public class CreateStudent extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		request.getRequestDispatcher("add-student.html").include(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		
+		String name = request.getParameter("Name");
+		String RollNo = request.getParameter("rollno");
+		String Class = request.getParameter("class");
+		
+		try {
+			SessionFactory factory = Util.buildConnection();
+			
+			Session session = factory.openSession();
+			
+			StudentDetails studentdetails = new StudentDetails(name, RollNo, Class);
+			
+			Transaction tx = session.beginTransaction();
+			
+			session.save(studentdetails);
+			
+			tx.commit();
+			
+			if(session != null) {
+				out.println("<div align='center'><h2 style='color:green'>STUDENT ADDED SUCCESSFULLY!</h2>"
+						+ "<a href='admin-page.html'>RETURN To MainMenu</a>"
+						+ "</div>");
+			}
+			session.close();
+		} catch (Exception e) {
+			out.println("<div align='center'><h2 style='color:red'>TRY AGAIN! OPERATION FAILED...</h2>"
+					+ "<a href='admin-page.html'>RETURN To MainMenu</a>"
+					+ "</div>");
+		}
+	}
+
+}
+
+CreateTeacher.java:
+
+package com.operations;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+import com.AllDetails.TeacherDetails;
+import com.util.Util;
+
+@WebServlet("/add-teacher")
+public class CreateTeacher extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		request.getRequestDispatcher("add-teacher.html").include(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		String name = request.getParameter("Name");
+		String Subject = request.getParameter("subject");
+		String Class = request.getParameter("class");
+		
+		try {
+			SessionFactory factory = Util.buildConnection();
+			
+			Session session = factory.openSession();
+			
+			TeacherDetails teacherdetails = new TeacherDetails(name, Subject, Class);
+			
+			Transaction tx = session.beginTransaction();
+			
+			session.save(teacherdetails);
+			
+			tx.commit();
+			
+			if(session != null) {
+				out.println("<div align='center'><h2 style='color:green'>TEACHER ADDED SUCCESSFULLY!</h2>"
+						+ "<a href='admin-page.html'>RETURN To MainMenu</a>"
+						+ "</div>");
+			}
+			session.close();
+		} catch (Exception e) {
+			out.println("<div align='center'><h2 style='color:red'>TRY AGAIN! OPERATION FAILED...</h2></div>");
+		}
+	}
+
+}
+
+InitializeConnection.java:
+
+package com.operations;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import com.util.Util;
+
+@WebServlet("/init")
+public class InitializeConnection extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+     
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		request.getRequestDispatcher("index.jsp").include(request, response);
+		
+		try {
+			SessionFactory factory = Util.buildConnection();
+			Session session = factory.openSession();
+			
+			if(session != null) {
+				out.println("<div align='center'><h2 style='color:green'>CONNECTED SUCCESSFULLY</h2></div>");
+			}
+			session.close();
+		} catch (Exception e) {
+				out.println("<div align='center'><h2 style='color:red'>UNABLE TO CONNECT!</h2></div>");
+		}
+		
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
+
+}
+
+ShowClasses.java:
+
+package com.operations;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import com.AllDetails.ClassDetails;
+import com.util.Util;
+
+@WebServlet("/listclasses")
+public class ShowClasses extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+try {
+			SessionFactory factory = Util.buildConnection();
+			
+			Session session = factory.openSession();
+			
+			List<ClassDetails> list = session.createQuery("from ClassDetails").list();
+			
+			out.println("<h2>LIST OF CLASSES");
+			
+			out.println("<style> table,td,th{"
+					+ "border:2px solid red; "
+					+ "padding:2px;); "
+					+ "</style>");
+			out.println("<table>");
+			out.println("<tr>");
+			out.println("<th>S.No</th>");
+			out.println("<th>Class Name</th>");
+			out.println("<th>Section</th>");
+			out.println("<th>Room No</th>");
+			out.println("<tr>");
+			
+			for(ClassDetails classdet : list) {
+				out.println("<tr>");
+				out.println("<td>"+ classdet.getId() +"</td>");
+				out.println("<td>"+ classdet.getClassName() +"</td>");
+				out.println("<td>"+ classdet.getClassSection()+"</td>");
+				out.println("<td>"+ classdet.getClassRoomNo() +"</td>");
+				out.println("</tr>");
+			}
+			out.println("</table>");
+			out.println("<a href='admin-page.html'>RETURN To MainMenu!</a>");
+			session.close();
+		} catch (Exception e) {
+			out.println("<h2 style='color:red'>TRY AGAIN! OPERATION FAILED...<h2>");
+			out.println("<a href='admin-page.html'>RETURN To MainMenu!</a>");
+		}
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		doGet(request, response);
+	}
+
+}
+
+ShowStudents.java:
+
+package com.operations;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import com.AllDetails.StudentDetails;
+import com.util.Util;
+
+@WebServlet("/liststudents")
+public class ShowStudents extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		try {
+			SessionFactory factory = Util.buildConnection();
+			
+			Session session = factory.openSession();
+			
+			List<StudentDetails> list = session.createQuery("from StudentDetails").list();
+			
+			out.println("<h2>LIST OF STUDENTS");
+			
+			out.println("<style> table,td,th{"
+					+ "border:2px solid red; "
+					+ "padding:2px;); "
+					+ "</style>");
+			out.println("<table>");
+			out.println("<tr>");
+			out.println("<th>S.No</th>");
+			out.println("<th>Student Name</th>");
+			out.println("<th>Student RollNo</th>");
+			out.println("<th>Student Class</th>");
+			out.println("<tr>");
+			
+			for(StudentDetails stdet : list) {
+				out.println("<tr>");
+				out.println("<td>"+ stdet.getId() +"</td>");
+				out.println("<td>"+ stdet.getName() +"</td>");
+				out.println("<td>"+ stdet.getRollNo() +"</td>");
+				out.println("<td>"+ stdet.getStudentClass() +"</td>");
+				out.println("</tr>");
+}
+			out.println("</table>");
+			out.println("<a href='admin-page.html'>Back To MainMenu</a>");
+			session.close();
+		} catch (Exception e) {
+			out.println("<h2 style='color:red'>Operation Failed<h2>");
+			out.println("<a href='admin-page.html'>Back To MainMenu</a>");
+		}
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		doGet(request, response);
+	}
+
+}
+
+ShowSubjects.java:
+
+package com.operations;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import com.AllDetails.SubjectDetails;
+import com.util.Util;
+
+@WebServlet("/listsubjects")
+public class ShowSubjects extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		try {
+			SessionFactory factory = Util.buildConnection();
+			
+			Session session = factory.openSession();
+			
+			List<SubjectDetails> list = session.createQuery("from SubjectDetails").list();
+			
+			out.println("<h2>LIST OF SUBJECTS");
+			
+			out.println("<style> table,td,th{"
+					+ "border:2px solid red; "
+					+ "padding:2px;); "
+					+ "</style>");
+			out.println("<table>");
+			out.println("<tr>");
+			out.println("<th>S.No</th>");
+			out.println("<th>Subject Name</th>");
+			out.println("<th>Subject Code</th>");
+			out.println("<th>Subject Teacher</th>");
+			out.println("<tr>");
+			
+			for(SubjectDetails subdet : list) {
+				out.println("<tr>");
+				out.println("<td>"+ subdet.getId() +"</td>");
+				out.println("<td>"+ subdet.getSubjectName() +"</td>");
+				out.println("<td>"+ subdet.getSubjectCode()+"</td>");
+				out.println("<td>"+ subdet.getSubjectTeacher() +"</td>");
+				out.println("</tr>");
+			}
+			out.println("</table>");
+			out.println("<a href='admin-page.html'>RETURN To MainMenu!</a>");
+			session.close();
+		} catch (Exception e) {
+			out.println("<h2 style='color:red'>TRY AGAIN! OPERATION FAILED...<h2>");
+			out.println("<a href='admin-page.html'>RETURN To MainMenu</a>");
+		}
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		doGet(request, response);
+}
+
+}
+
+ShowTeachers.java:
+
+package com.operations;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import com.AllDetails.TeacherDetails;
+import com.util.Util;
+
+@WebServlet("/listteachers")
+public class ShowTeachers extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		
+		try {
+			SessionFactory factory = Util.buildConnection();
+			
+			Session session = factory.openSession();
+			
+			List<TeacherDetails> list = session.createQuery("from TeacherDetails").list();
+			
+			out.println("<h2>LIST OF TEACHERSS");
+			
+			out.println("<style> table,td,th{"
+					+ "border:2px solid red; "
+					+ "padding:2px;); "
+					+ "</style>");
+			out.println("<table>");
+			out.println("<tr>");
+			out.println("<th>S.No</th>");
+			out.println("<th>Teacher Name</th>");
+			out.println("<th>Teacher Subject</th>");
+			out.println("<th>Teacher Class</th>");
+			out.println("<tr>");
+			
+			for(TeacherDetails teachdet : list) {
+				out.println("<tr>");
+				out.println("<td>"+ teachdet.getId() +"</td>");
+				out.println("<td>"+ teachdet.getName() +"</td>");
+				out.println("<td>"+ teachdet.getSubject() +"</td>");
+				out.println("<td>"+ teachdet.getTeacherClass() +"</td>");
+				out.println("</tr>");
+			}
+			out.println("</table>");
+			out.println("<a href='admin-page.html'>RETURN To MainMenu!</a>");
+			session.close();
+		} catch (Exception e) {
+			out.println("<h2 style='color:red'>TRY AGAIN! OPERATION FAILED...<h2>");
+			out.println("<a href='admin-page.html'>RETURN To MainMenu!</a>");
+		}
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		doGet(request, response);
+	}
+
+}
